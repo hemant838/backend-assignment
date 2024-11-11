@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "passport";
+import jwt from "jsonwebtoken";
+
 const router = Router();
 
 router.get(
@@ -15,11 +17,16 @@ router.get(
         failureRedirect: "/",
     }),
     (req, res) => {
-        const token = jwt.encode(
-            { userId: req.user._id },
-            process.env.JWT_SECRET
-        );
-        res.redirect(`/dashboard?token=${token}`);
+        try {
+            const token = jwt.sign(
+                { userId: req.user._id },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+            res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${token}`);
+        } catch (error) {
+            res.status(500).send("Error generating token");
+        }
     }
 );
 

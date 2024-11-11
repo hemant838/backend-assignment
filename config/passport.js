@@ -7,7 +7,7 @@ use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "/auth/google/callback",
+            callbackURL: "/api/google/google/callback",
         },
         async (profile, done) => {
             try {
